@@ -8,7 +8,7 @@ pipeline {
             steps {
                 sh '''
             rm -rf ~/deployment || true
-            git clone git@github.com:DEL-ORG/Eric-do-it-yourself-devops-automation.git ~/deployment
+            git clone git@github.com:cyprientemateu/cyprien-ecommerce-project-automation.git ~/deployment
                 '''
             }
         }
@@ -42,6 +42,7 @@ pipeline {
             steps {
                 sh '''
             cd ~/deployment
+            sleep 5
             docker-compose ps 
                 '''
             }
