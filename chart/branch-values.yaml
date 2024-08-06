@@ -1,24 +1,24 @@
 catalog:
-  tag: "15"
+  tag: "16"
 catalog_db:
-  tag: "15"
+  tag: "16"
 cart:
-  tag: "15"
+  tag: "16"
 cart_dynamodb:
-  tag: "15"
+  tag: "16"
 orders:
-  tag: "15"
+  tag: "16"
 assets_rabbitmq:
-  tag: "15"
+  tag: "16"
 checkout:
-  tag: "15"
+  tag: "16"
 checkout_db:
-  tag: "15"
+  tag: "16"
 assets:
-  tag: "15"
+  tag: "16"
 ui:
-  tag: "15"
+  tag: "16"
 order_db:
   tag: "14"
 orders_db:
-  tag: "15"
+  tag: "16"
