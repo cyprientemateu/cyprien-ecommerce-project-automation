@@ -156,7 +156,7 @@ pipeline {
 
          stage('Trigger Deployment') {
             steps {
-                withCredentials([usernamePassword(credentialsId: GITHUB_CREDENTIALS_ID, usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASSWORD')]) {
+                withCredentials([string(credentialsId: 'tcc-github-access', variable: 'GITHUB_TOKEN')]) {
                     sh '''
                     TAG=${BUILD_NUMBER}
                     rm -rf cyprien-ecommerce-project-automation || true
