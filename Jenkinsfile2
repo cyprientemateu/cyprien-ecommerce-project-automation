@@ -166,12 +166,12 @@ pipeline {
                     yq eval '.assets.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.checkout_db.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.checkout.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.assets_rabbitmq.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.orders_db.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.orders.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.cart_dynamodb.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.cart.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.catalog_db.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.order_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.assets_rabbitmq.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.catalog.tag = "'"$TAG"'"' -i branch-values.yaml
 
                     git config --global user.name "cyprientemateu"
