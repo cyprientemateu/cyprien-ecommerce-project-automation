@@ -1,24 +1,24 @@
 catalog:
-  tag: "13"
+  tag: "14"
 orders_db:
   tag: "6996a8"
 catalog_db:
-  tag: "13"
+  tag: "14"
 cart:
-  tag: "13"
+  tag: "14"
 cart_dynamodb:
-  tag: "13"
+  tag: "14"
 orders:
-  tag: "13"
+  tag: "14"
 assets_rabbitmq:
-  tag: "13"
+  tag: "14"
 checkout:
-  tag: "13"
+  tag: "14"
 checkout_db:
-  tag: "13"
+  tag: "14"
 assets:
-  tag: "13"
+  tag: "14"
 ui:
-  tag: "13"
+  tag: "14"
 order_db:
-  tag: "13"
+  tag: "14"
