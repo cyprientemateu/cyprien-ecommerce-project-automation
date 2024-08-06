@@ -77,8 +77,8 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/ui
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER} .
-                docker push devopseasylearning/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER} .
+                docker push cyprientemateu/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER}
                 '''
             }
         }
@@ -89,10 +89,10 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER} . -f Dockerfile-db               
-                docker push devopseasylearning/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
-                docker push devopseasylearning/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER} . -f Dockerfile-db               
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
                 '''
             }
         }
@@ -103,10 +103,10 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/checkout
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER} .
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER} . -f Dockerfile-db
-                docker push devopseasylearning/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER}
-                docker push devopseasylearning/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER}
                 '''
             }
         }
@@ -117,10 +117,10 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER} .
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER} . -f Dockerfile-db
-                docker push devopseasylearning/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER}
-                docker push devopseasylearning/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER}
                 '''
             }
         }
@@ -131,10 +131,10 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/cart
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER} .
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER} . -f Dockerfile-dynamodb 
-                docker push devopseasylearning/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER}
-                docker push devopseasylearning/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER} . -f Dockerfile-dynamodb 
+                docker push cyprientemateu/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER}
                 '''
             }
         }
@@ -145,10 +145,10 @@ pipeline {
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/assets
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER} .
-                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbit-mq
-                docker push devopseasylearning/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER}
-                docker push devopseasylearning/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER}
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbit-mq
+                docker push cyprientemateu/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER}
                 '''
             }
         }

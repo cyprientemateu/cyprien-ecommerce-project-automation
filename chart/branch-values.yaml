@@ -1,0 +1,22 @@
+catalog:
+  tag: "6"
+orders_db:
+  tag: "6"
+catalog_db:
+  tag: "6"
+cart:
+  tag: "6"
+cart_dynamodb:
+  tag: "6"
+orders:
+  tag: "6"
+orders_db_rabbitmq:
+  tag: "6"
+checkout:
+  tag: "6"
+checkout_db:
+  tag: "6"
+assets:
+  tag: "6"
+ui:
+  tag: "6"
