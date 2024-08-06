@@ -10,7 +10,7 @@ cart_dynamodb:
   tag: "69e73f"
 orders:
   tag: "6996a8"
-orders_db_rabbitmq:
+assets_rabbitmq:
   tag: "6996a8"
 checkout:
   tag: "b45290"
