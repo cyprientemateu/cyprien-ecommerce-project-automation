@@ -1,0 +1,204 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_CREDENTIALS_ID = 'tcc-docker-hub'
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+    stages {
+        stage('Setup parameters') {
+            steps {
+                script {
+                    properties([
+                        parameters([
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_UI',
+                            //     description: 'Enter branch to deploy the UI',
+                            //     trim: true
+                            // ),
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_ORDERS',
+                            //     description: 'Enter branch to deploy the ORDERS',
+                            //     trim: true
+                            // ),
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_CHECKOUT',
+                            //     description: 'Enter branch to deploy the CHECKOUT',
+                            //     trim: true
+                            // ),
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_CATALOG',
+                            //     description: 'Enter branch to deploy the CATALOG',
+                            //     trim: true
+                            // ),
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_CART',
+                            //     description: 'Enter branch to deploy the CART',
+                            //     trim: true
+                            // ),
+                            // string(
+                            //     defaultValue: 'main',
+                            //     name: 'BRANCH_ASSETS',
+                            //     description: 'Enter branch to deploy the ASSETS',
+                            //     trim: true
+                            // ),
+                            string(
+                                defaultValue: 'main',
+                                name: 'BRANCH_NAME',
+                                description: 'Enter branch to deploy the apps',
+                                trim: true
+                            )
+                        ])
+                    ])
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'tcc-docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('UI build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/ui
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER} .
+                docker push devopseasylearning/a1cyprien_do_it_yourself_ui:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('ORDERS build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER} . -f Dockerfile-db               
+                docker push devopseasylearning/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
+                docker push devopseasylearning/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('CHECKOUT build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/checkout
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER} .
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker push devopseasylearning/a1cyprien_do_it_yourself_checkout:${BUILD_NUMBER}
+                docker push devopseasylearning/a1cyprien_do_it_yourself_checkout_db:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('CATALOG build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER} .
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker push devopseasylearning/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER}
+                docker push devopseasylearning/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('CART build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/cart
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER} .
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER} . -f Dockerfile-dynamodb 
+                docker push devopseasylearning/a1cyprien_do_it_yourself_cart:${BUILD_NUMBER}
+                docker push devopseasylearning/a1cyprien_do_it_yourself_cart_dynamodb:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('ASSETS build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/assets
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER} .
+                docker build -t devopseasylearning/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbit-mq
+                docker push devopseasylearning/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER}
+                docker push devopseasylearning/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER}
+                '''
+            }
+        }
+
+        stage('trigger-deployment') {
+            steps {
+                sh '''
+                TAG=${BUILD_NUMBER}
+                rm -rf cyprien-ecommerce-project-automation || true
+                git clone https://github.com/cyprientemateu/cyprien-ecommerce-project-automation.git 
+                cd cyprien-ecommerce-project-automation/chart
+                yq eval '.ui.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.assets.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.checkout_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.checkout.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.orders_db_rabbitmq.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.orders.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.cart_dynamodb.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.cart.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.catalog_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.orders_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                yq eval '.catalog.tag = "'"$TAG"'"' -i branch-values.yaml
+
+                git config --global user.name "cyprientemateu"
+                git config --global user.email cyprien.temateu@yahoo.com
+
+                git add -A
+                if git diff-index --quiet HEAD; then
+                    echo "No changes to commit"
+                else
+                    git commit -m "updating APPS to ${BUILD_NUMBER}"
+                    git push origin main
+                fi
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend(channel: '#development-alerts', color: 'good', message: "SUCCESSFUL: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        unstable {
+            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        failure {
+            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+        }
+        cleanup {
+            deleteDir()
+        }
+    }
+}
