@@ -18,7 +18,5 @@ assets:
   tag: "17"
 ui:
   tag: "17"
-orders_db_rabbitmq:
-  tag: bd1119"
 assets_rabbitmq:
   tag: "17"

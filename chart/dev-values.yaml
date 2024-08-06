@@ -18,5 +18,5 @@ assets:
   tag: "bd1119"
 ui:
   tag: "bd1119"
-orders_db_rabbitmq:
+assets_rabbitmq:
   tag: bd1119
