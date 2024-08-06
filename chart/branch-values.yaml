@@ -1,22 +1,24 @@
 catalog:
-  tag: "bd1119"
+  tag: "17"
 orders_db:
-  tag: "bd1119"
+  tag: "17"
 catalog_db:
-  tag: "bd1119"
+  tag: "17"
 cart:
-  tag: "bd1119"
+  tag: "17"
 cart_dynamodb:
-  tag: "bd1119"
+  tag: "17"
 orders:
-  tag: "bd1119"
+  tag: "17"
 checkout:
-  tag: "bd1119"
+  tag: "17"
 checkout_db:
-  tag: "bd1119"
+  tag: "17"
 assets:
-  tag: "bd1119"
+  tag: "17"
 ui:
-  tag: "bd1119"
+  tag: "17"
 orders_db_rabbitmq:
   tag: bd1119"
+assets_rabbitmq:
+  tag: "17"
