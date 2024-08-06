@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_CREDENTIALS_ID = 'tcc-docker-hub'
-        GITHUB_CREDENTIALS_ID = 'tcc-github-access'
+        GITHUB_CREDENTIALS_ID = 'tcc-github-token'
     }
     options {
         buildDiscarder(logRotator(numToKeepStr: '20'))
