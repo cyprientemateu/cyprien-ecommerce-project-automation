@@ -174,7 +174,7 @@ pipeline {
                     yq eval '.order_db.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.catalog.tag = "'"$TAG"'"' -i branch-values.yaml
 
-                    git config --global user.name "Cyprien Temateu"
+                    git config --global user.name "cyprientemateu"
                     git config --global user.email cyprien.temateu@yahoo.com
 
                     git add -A
