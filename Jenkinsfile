@@ -20,24 +20,24 @@ pipeline {
                 '''
             }
         }
-        // stage('pull images') {
-        //     steps {
-        //         sh '''
-        //     cd ~/deployment
-        //     docker-compose pull
-        //         '''
-        //     }
-        // }
+        stage('pull images') {
+            steps {
+                sh '''
+            cd ~/deployment
+            docker-compose pull
+                '''
+            }
+        }
         
-        // stage('deploy') {
-        //     steps {
-        //         sh '''
-        //     cd ~/deployment
+        stage('deploy') {
+            steps {
+                sh '''
+            cd ~/deployment
 
-        //     docker-compose up -d  --remove-orphans
-        //         '''
-        //     }
-        // }
+            docker-compose up -d  --remove-orphans
+                '''
+            }
+        }
         stage('list container') {
             steps {
                 sh '''
