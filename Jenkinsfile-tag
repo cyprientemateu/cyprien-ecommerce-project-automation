@@ -1,0 +1,170 @@
+pipeline {
+    agent {
+        label ("deploy")
+    }
+    environment {
+        DOCKER_CREDENTIALS_ID = 'tcc-docker-hub'
+        GITHUB_CREDENTIALS_ID = 'tcc-github-access'
+    }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '3'))
+        disableConcurrentBuilds()
+        timeout(time: 60, unit: 'MINUTES')
+        timestamps()
+    }
+    stages {
+        stage('Setup parameters') {
+            steps {
+                script {
+                    properties([
+                        parameters([
+                            string(
+                                defaultValue: 'v1.0.0',
+                                name: 'TAG_APPS',
+                                description: 'Enter TAG for APPS',
+                                trim: true
+                            )
+                        ])
+                    ])
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'tcc-docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('validating input') {
+            steps {
+                sh '''
+                cd ${WORKSPACE} 
+                bash validate.sh $TAG_APPS
+                '''
+            }
+        }
+
+        stage('Tag Update') {
+            steps {
+                sh '''
+                rm -rf TAG || true
+                mkdir TAG && cd TAG
+                git clone -b production https://github.com/cyprientemateu/cyprien-ecommerce-project.git  APPS
+                cd APPS
+                DIR=$(basename "$(pwd)")
+
+                if git rev-parse "$TAG_APPS" >/dev/null 2>&1; then
+                    git tag -d $TAG_APPS
+                    git push origin :refs/tags/$TAG_APPS
+                fi
+                git tag -a $TAG_APPS -m "Release version $TAG_APPS"
+                git push origin $TAG_APPS
+
+                '''
+            }
+        }
+
+        stage('UI build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/ui
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_ui:${TAG_APPS} .
+                docker push cyprientemateu/a1cyprien_do_it_yourself_ui:${TAG_APPS}
+                '''
+            }
+        }
+
+        stage('ORDERS build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS} . -f Dockerfile-db               
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS}
+                '''
+            }
+        }
+
+        stage('CHECKOUT build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/checkout
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_checkout:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_checkout_db:${TAG_APPS} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_checkout:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_checkout_db:${TAG_APPS}
+                '''
+            }
+        }
+
+        stage('CATALOG build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS}
+                '''
+            }
+        }
+
+        stage('CART build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/cart
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_cart:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:${TAG_APPS} . -f Dockerfile-dynamodb 
+                docker push cyprientemateu/a1cyprien_do_it_yourself_cart:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:${TAG_APPS}
+                '''
+            }
+        }
+
+        stage('ASSETS build and push') {
+            steps {
+                sh '''
+                rm -rf cyprien-ecommerce-project || true
+                git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/assets
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_assets:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_assets_rabbitmq:${TAG_APPS} . -f Dockerfile-rabbitmq
+                docker push cyprientemateu/a1cyprien_do_it_yourself_assets:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_assets_rabbitmq:${TAG_APPS}
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            slackSend(channel: '#development-alerts', color: 'good', message: "SUCCESSFUL: Application cyprien-ecommerce-project READY for PROD\n TAG information\n NEW_TAG: $TAG_APPS")
+        }
+
+        unstable {
+            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project  Job '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
+        }
+
+        failure {
+            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
+        }
+
+        cleanup {
+            deleteDir()
+        }
+    }
+}
