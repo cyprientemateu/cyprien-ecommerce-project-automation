@@ -63,7 +63,7 @@ pipeline {
                     fi
                     git tag -a $TAG_APPS -m "Release version $TAG_APPS"
                     git push origin $TAG_APPS
-
+                    cd ..
                     '''
                 }            
             }
