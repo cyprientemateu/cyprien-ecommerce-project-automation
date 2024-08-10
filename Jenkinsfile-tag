@@ -49,21 +49,23 @@ pipeline {
 
         stage('Tag Update') {
             steps {
-                sh '''
-                rm -rf TAG || true
-                mkdir TAG && cd TAG
-                git clone -b production https://github.com/cyprientemateu/cyprien-ecommerce-project.git  APPS
-                cd APPS
-                DIR=$(basename "$(pwd)")
+                withCredentials([string(credentialsId: 'tcc-github-access', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                    rm -rf TAG || true
+                    mkdir TAG && cd TAG
+                    git clone -b production https://github.com/cyprientemateu/cyprien-ecommerce-project.git  APPS
+                    cd APPS
+                    DIR=$(basename "$(pwd)")
 
-                if git rev-parse "$TAG_APPS" >/dev/null 2>&1; then
-                    git tag -d $TAG_APPS
-                    git push origin :refs/tags/$TAG_APPS
-                fi
-                git tag -a $TAG_APPS -m "Release version $TAG_APPS"
-                git push origin $TAG_APPS
+                    if git rev-parse "$TAG_APPS" >/dev/null 2>&1; then
+                        git tag -d $TAG_APPS
+                        git push origin :refs/tags/$TAG_APPS
+                    fi
+                    git tag -a $TAG_APPS -m "Release version $TAG_APPS"
+                    git push origin $TAG_APPS
 
-                '''
+                    '''
+                }            
             }
         }
 
