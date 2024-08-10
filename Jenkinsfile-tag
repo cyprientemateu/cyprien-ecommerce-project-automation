@@ -53,7 +53,7 @@ pipeline {
                     sh '''
                     rm -rf TAG || true
                     mkdir TAG && cd TAG
-                    git clone -b production https://cyprientemateu:${GITHUB_TOKEN}@github.com/cyprientemateu/cyprien-ecommerce-project.git APPS
+                    git clone -b production https://cyprientemateu:${GITHUB_TOKEN}@github.com/cyprientemateu/cyprien-ecommerce-project.git   APPS
                     cd APPS
                     DIR=$(basename "$(pwd)")
 
