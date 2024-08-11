@@ -165,11 +165,11 @@ pipeline {
         }
 
         unstable {
-            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project  Job '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
+            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project \n Action : Please check the console output to fix this job IMMEDIATELY \n '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
         }
 
         failure {
-            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
+            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project \n Action : Please check the console output to fix this job IMMEDIATELY \n '${env.JOB_NAME} [${env.TAG}]' (${env.BUILD_URL})")
         }
 
         cleanup {
