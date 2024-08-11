@@ -1,24 +1,24 @@
 catalog:
-  tag: "4c5488"
+  tag: "adeb52"
 orders_db:
-  tag: "4c5488"
+  tag: "adeb52"
 catalog_db:
-  tag: "4c5488"
+  tag: "adeb52"
 cart:
-  tag: "4c5488"
+  tag: "adeb52"
 cart_dynamodb:
-  tag: "4c5488"
+  tag: "adeb52"
 orders:
-  tag: "4c5488"
+  tag: "adeb52"
 checkout:
-  tag: "4c5488"
+  tag: "adeb52"
 checkout_db:
-  tag: "4c5488"
+  tag: "adeb52"
 assets:
-  tag: "4c5488"
+  tag: "adeb52"
 ui:
-  tag: "4c5488"
+  tag: "adeb52"
 assets_rabbitmq:
   tag: bd1119
 orders_db_rabbitmq:
-  tag: 4c5488
+  tag: adeb52
