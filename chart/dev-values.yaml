@@ -1,24 +1,24 @@
 catalog:
-  tag: "45848c"
+  tag: "4c5488"
 orders_db:
-  tag: "45848c"
+  tag: "4c5488"
 catalog_db:
-  tag: "45848c"
+  tag: "4c5488"
 cart:
-  tag: "45848c"
+  tag: "4c5488"
 cart_dynamodb:
-  tag: "45848c"
+  tag: "4c5488"
 orders:
-  tag: "45848c"
+  tag: "4c5488"
 checkout:
-  tag: "45848c"
+  tag: "4c5488"
 checkout_db:
-  tag: "45848c"
+  tag: "4c5488"
 assets:
-  tag: "45848c"
+  tag: "4c5488"
 ui:
-  tag: "45848c"
+  tag: "4c5488"
 assets_rabbitmq:
   tag: bd1119
 orders_db_rabbitmq:
-  tag: 45848c
+  tag: 4c5488
