@@ -57,7 +57,7 @@ pipeline {
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} . -f Dockerfile-db               
                 docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
                 '''
             }
         }
