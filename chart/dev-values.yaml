@@ -1,22 +1,24 @@
 catalog:
-  tag: "bd1119"
+  tag: "45848c"
 orders_db:
-  tag: "bd1119"
+  tag: "45848c"
 catalog_db:
-  tag: "bd1119"
+  tag: "45848c"
 cart:
-  tag: "bd1119"
+  tag: "45848c"
 cart_dynamodb:
-  tag: "bd1119"
+  tag: "45848c"
 orders:
-  tag: "bd1119"
+  tag: "45848c"
 checkout:
-  tag: "bd1119"
+  tag: "45848c"
 checkout_db:
-  tag: "bd1119"
+  tag: "45848c"
 assets:
-  tag: "bd1119"
+  tag: "45848c"
 ui:
-  tag: "bd1119"
+  tag: "45848c"
 assets_rabbitmq:
   tag: bd1119
+orders_db_rabbitmq:
+  tag: 45848c
