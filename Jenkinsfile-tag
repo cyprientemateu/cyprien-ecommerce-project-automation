@@ -23,6 +23,13 @@ pipeline {
                                 name: 'TAG_APPS',
                                 description: 'Enter TAG for APPS',
                                 trim: true
+                            ),
+
+                            string(
+                                defaultValue: 'production',
+                                name: 'BRANCH_NAME',
+                                description: 'Enter TAG for APPS',
+                                trim: true
                             )
                         ])
                     ])
