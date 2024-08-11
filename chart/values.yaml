@@ -2,24 +2,24 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 catalog:
-  tag: '{TAG}'
+  tag: '7e51e5'
 orders_db:
-  tag: '{TAG}'
+  tag: '7e51e5'
 catalog_db:
-  tag: '{TAG}'
+  tag: '7e51e5'
 cart:
-  tag: '{TAG}'
+  tag: '7e51e5'
 cart_dynamodb:
-  tag: '{TAG}'
+  tag: '7e51e5'
 orders:
-  tag: '{TAG}'
+  tag: '7e51e5'
 orders_db_rabbitmq:
-  tag: '{TAG}'
+  tag: '7e51e5'
 checkout:
-  tag: '{TAG}'
+  tag: '7e51e5'
 checkout_db:
-  tag: '{TAG}'
+  tag: '7e51e5'
 assets:
-  tag: '{TAG}'
+  tag: '7e51e5'
 ui:
-  tag: '{TAG}'
+  tag: '7e51e5'
