@@ -96,10 +96,10 @@ pipeline {
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS} .
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS} . -f Dockerfile-db 
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_rabbitmq:${TAG_APPS} . -f Dockerfile-rabbit-mq              
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS} . -f Dockerfile-rabbit-mq              
                 docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS}
                 docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_rabbitmq:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS}
                 '''
             }
         }
