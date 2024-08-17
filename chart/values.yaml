@@ -1,25 +1,25 @@
 # Default values for do_it_yourself.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-catalog:
-  tag: 0.8.1
-orders_db:
-  tag: 8.0
-catalog_db:
-  tag: 8.0
-cart:
-  tag: 0.8.1  
-cart_dynamodb:
-  tag: 1.13.1 
-orders:
-  tag: 0.8.1
-orders_db_rabbitmq:
-  tag: 3-manage
-checkout:
-  tag: 0.8.1
-checkout_db:
-  tag: 6.0-alpine
-assets:
-  tag: 0.8.1 
 ui:
-  tag: 0.8.1
+  tag: "17"
+catalog:
+  tag: "17"
+catalog-db:
+  tag: "17"
+checkout:
+  tag: "17"
+checkout-db:
+  tag: "17"
+orders:
+  tag: "17"
+orders-db:
+  tag: "17"
+orders-db-rabbitmq:
+  tag: "17"
+cart:
+  tag: "17"
+cart-dynamodb:
+  tag: "17"
+assets:
+  tag: "17"
