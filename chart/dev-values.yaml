@@ -1,22 +1,22 @@
-catalog:
-  tag: "bd1119"
-orders_db:
-  tag: "bd1119"
-catalog_db:
-  tag: "bd1119"
-cart:
-  tag: "bd1119"
-cart_dynamodb:
-  tag: "bd1119"
-orders:
-  tag: "bd1119"
-checkout:
-  tag: "bd1119"
-checkout_db:
-  tag: "bd1119"
-assets:
-  tag: "bd1119"
 ui:
-  tag: "bd1119"
-assets_rabbitmq:
-  tag: bd1119
+  tag: "8e6b2e"
+catalog:
+  tag: "8e6b2e"
+catalog-db:
+  tag: "8e6b2e"
+checkout:
+  tag: "8e6b2e"
+checkout-db:
+  tag: "8e6b2e"
+orders:
+  tag: "8e6b2e"
+orders-db:
+  tag: "8e6b2e"
+orders-db-rabbitmq:
+  tag: "8e6b2e"
+cart:
+  tag: "8e6b2e"
+cart-dynamodb:
+  tag: "8e6b2e"
+assets:
+  tag: "8e6b2e"

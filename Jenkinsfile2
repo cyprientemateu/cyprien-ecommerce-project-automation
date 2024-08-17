@@ -5,7 +5,7 @@ pipeline {
         GITHUB_CREDENTIALS_ID = 'tcc-github-access'
     }
     options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '2'))
         disableConcurrentBuilds()
         timeout(time: 60, unit: 'MINUTES')
         timestamps()
@@ -16,42 +16,6 @@ pipeline {
                 script {
                     properties([
                         parameters([
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_UI',
-                            //     description: 'Enter branch to deploy the UI',
-                            //     trim: true
-                            // ),
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_ORDERS',
-                            //     description: 'Enter branch to deploy the ORDERS',
-                            //     trim: true
-                            // ),
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_CHECKOUT',
-                            //     description: 'Enter branch to deploy the CHECKOUT',
-                            //     trim: true
-                            // ),
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_CATALOG',
-                            //     description: 'Enter branch to deploy the CATALOG',
-                            //     trim: true
-                            // ),
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_CART',
-                            //     description: 'Enter branch to deploy the CART',
-                            //     trim: true
-                            // ),
-                            // string(
-                            //     defaultValue: 'main',
-                            //     name: 'BRANCH_ASSETS',
-                            //     description: 'Enter branch to deploy the ASSETS',
-                            //     trim: true
-                            // ),
                             string(
                                 defaultValue: 'main',
                                 name: 'BRANCH_NAME',
@@ -84,16 +48,16 @@ pipeline {
             }
         }
 
-        stage('ORDERS build and push') {
+        stage('CATALOG build and push') {
             steps {
                 sh '''
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
-                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} . -f Dockerfile-db               
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER}
                 '''
             }
         }
@@ -112,16 +76,18 @@ pipeline {
             }
         }
 
-        stage('CATALOG build and push') {
+        stage('ORDERS build and push') {
             steps {
                 sh '''
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
-                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER} . -f Dockerfile-db
-                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${BUILD_NUMBER}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${BUILD_NUMBER}
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER} . -f Dockerfile-db
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbit-mq               
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER}
                 '''
             }
         }
@@ -147,9 +113,7 @@ pipeline {
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/assets
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_assets_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbitmq
                 docker push cyprientemateu/a1cyprien_do_it_yourself_assets:${BUILD_NUMBER}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_assets_rabbitmq:${BUILD_NUMBER}
                 '''
             }
         }
@@ -163,16 +127,16 @@ pipeline {
                     git clone https://cyprientemateu:${GITHUB_TOKEN}@github.com/cyprientemateu/cyprien-ecommerce-project-automation.git  
                     cd cyprien-ecommerce-project-automation/chart
                     yq eval '.ui.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.assets.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.checkout_db.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.checkout.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.orders_db.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.orders.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.cart_dynamodb.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.cart.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.catalog_db.tag = "'"$TAG"'"' -i branch-values.yaml
-                    yq eval '.assets_rabbitmq.tag = "'"$TAG"'"' -i branch-values.yaml
                     yq eval '.catalog.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.catalog_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.checkout.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.checkout_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.orders.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.orders_db.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.orders_db_rabbitmq.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.cart.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.cart_dynamodb.tag = "'"$TAG"'"' -i branch-values.yaml
+                    yq eval '.assets.tag = "'"$TAG"'"' -i branch-values.yaml
 
                     git config --global user.name "cyprientemateu"
                     git config --global user.email cyprien.temateu@yahoo.com
@@ -192,13 +156,13 @@ pipeline {
 
     post {
         success {
-            slackSend(channel: '#development-alerts', color: 'good', message: "SUCCESSFUL: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend(channel: '#development-alerts', color: 'good', message: "SUCCESSFUL: Application cyprien-ecommerce-project '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         unstable {
-            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend(channel: '#development-alerts', color: 'warning', message: "UNSTABLE: Application cyprien-ecommerce-project \n Action : Please check the console output to fix this job IMMEDIATELY \n '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         failure {
-            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend(channel: '#development-alerts', color: '#FF0000', message: "FAILURE: Application cyprien-ecommerce-project \n Action : Please check the console output to fix this job IMMEDIATELY \n '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         cleanup {
             deleteDir()

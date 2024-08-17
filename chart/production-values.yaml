@@ -1,0 +1,22 @@
+ui:
+  tag: "17"
+catalog:
+  tag: "17"
+catalog_db:
+  tag: "17"
+checkout:
+  tag: "17"
+checkout_db:
+  tag: "17"
+orders:
+  tag: "17"
+orders_db:
+  tag: "17"
+orders_db_rabbitmq:
+  tag: "17"
+cart:
+  tag: "17"
+cart_dynamodb:
+  tag: "17"
+assets:
+  tag: "17"
