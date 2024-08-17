@@ -5,7 +5,7 @@ pipeline {
         GITHUB_CREDENTIALS_ID = 'tcc-github-access'
     }
     options {
-        buildDiscarder(logRotator(numToKeepStr: '5'))
+        buildDiscarder(logRotator(numToKeepStr: '2'))
         disableConcurrentBuilds()
         timeout(time: 60, unit: 'MINUTES')
         timestamps()
