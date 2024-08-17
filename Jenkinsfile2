@@ -83,7 +83,7 @@ pipeline {
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
                 cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER} . -f Dockerfile-db
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER} . -f Dockerfile-db
                 docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${BUILD_NUMBER} . -f Dockerfile-rabbit-mq               
                 docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${BUILD_NUMBER}
                 docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${BUILD_NUMBER}
