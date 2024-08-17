@@ -88,18 +88,16 @@ pipeline {
             }
         }
 
-        stage('ORDERS build and push') {
+        stage('CATALOG build and push') {
             steps {
                 sh '''
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
-                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS} . -f Dockerfile-db 
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS} . -f Dockerfile-rabbit-mq              
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS}
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS} . -f Dockerfile-db
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS}
                 '''
             }
         }
@@ -118,16 +116,18 @@ pipeline {
             }
         }
 
-        stage('CATALOG build and push') {
+        stage('ORDERS build and push') {
             steps {
                 sh '''
                 rm -rf cyprien-ecommerce-project || true
                 git clone -b ${BRANCH_NAME} https://github.com/cyprientemateu/cyprien-ecommerce-project.git
-                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/catalog
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS} .
-                docker build -t cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS} . -f Dockerfile-db
-                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG_APPS}
-                docker push cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG_APPS}
+                cd ${WORKSPACE}/cyprien-ecommerce-project/do-it-yourself/src/orders
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS} .
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS} . -f Dockerfile-db 
+                docker build -t cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS} . -f Dockerfile-rabbit-mq              
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG_APPS}
+                docker push cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG_APPS}
                 '''
             }
         }
