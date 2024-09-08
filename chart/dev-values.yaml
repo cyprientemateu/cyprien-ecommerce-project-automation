@@ -1,22 +1,22 @@
 ui:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 catalog:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 catalog-db:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 checkout:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 checkout-db:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 orders:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 orders-db:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 orders-db-rabbitmq:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 cart:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 cart-dynamodb:
-  tag: "8e6b2e"
+  tag: "4ab88c"
 assets:
-  tag: "8e6b2e"
+  tag: "4ab88c"
