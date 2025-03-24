@@ -141,7 +141,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-          image: "devopseasylearning/eric_do_it_yourself_catalog:{{ .Values.catalog.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_catalog:{{ .Values.catalog.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -195,7 +195,7 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: "devopseasylearning/eric_do_it_yourself_catalog_db:{{ .Values.catalog_db.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_catalog_db:{{ .Values.catalog_db.tag }}"
           imagePullPolicy: IfNotPresent
           env:
             - name: MYSQL_ROOT_PASSWORD
@@ -245,7 +245,7 @@ metadata:
 data:
   SPRING_PROFILES_ACTIVE: dynamodb
   CARTS_DYNAMODB_TABLENAME: Items
-  CARTS_DYNAMODB_CREATETABLE: "false"
+  CARTS_DYNAMODB_READCAPACITYUNITS: "5"
   CARTS_DYNAMODB_CREATETABLE: "true"
   AWS_ACCESS_KEY_ID: key
   AWS_SECRET_ACCESS_KEY: secret
@@ -353,7 +353,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-          image: "devopseasylearning/eric_do_it_yourself_cart:{{ .Values.cart.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_cart:{{ .Values.cart.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -406,7 +406,7 @@ spec:
     spec:
       containers:
         - name: dynamodb
-          image: "devopseasylearning/eric_do_it_yourself_cart_dynamodb:{{ .Values.cart_dynamodb.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:{{ .Values.cart_dynamodb.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: dynamodb
@@ -594,7 +594,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-          image: "devopseasylearning/eric_do_it_yourself_orders:{{ .Values.orders.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_orders:{{ .Values.orders.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -648,7 +648,7 @@ spec:
     spec:
       containers:
         - name: postgresql
-          image: "devopseasylearning/eric_do_it_yourself_orders_db:{{ .Values.orders_db.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_orders_db:{{ .Values.orders_db.tag }}"
           imagePullPolicy: IfNotPresent
           env:
             - name: POSTGRES_DB
@@ -704,7 +704,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: "devopseasylearning/eric_do_it_yourself_orders_db_rabbitmq:{{ .Values.orders_db_rabbitmq.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:{{ .Values.orders_db_rabbitmq.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
           - name: amqp
@@ -842,7 +842,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-          image: "devopseasylearning/eric_do_it_yourself_checkout:{{ .Values.checkout.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_checkout:{{ .Values.checkout.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -895,7 +895,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: "devopseasylearning/eric_do_it_yourself_checkout_db:{{ .Values.checkout_db.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_checkout_db:{{ .Values.checkout_db.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: redis
@@ -994,7 +994,7 @@ spec:
               drop:
               - ALL
             readOnlyRootFilesystem: false
-          image: "devopseasylearning/eric_do_it_yourself_assets:{{ .Values.assets.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_assets:{{ .Values.assets.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -1128,7 +1128,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 1000
-          image: "devopseasylearning/eric_do_it_yourself_ui:{{ .Values.ui.tag }}"
+          image: "cyprientemateu/a1cyprien_do_it_yourself_ui:{{ .Values.ui.tag }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

@@ -13,7 +13,7 @@ services:
       - ENDPOINTS_CHECKOUT=http://checkout:8080
       - ENDPOINTS_ASSETS=http://assets:8080
     hostname: ui
-    image: cyprientemateu/a1cyprien-do-it-yourself-ui:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_ui:${TAG}
     restart: always
     deploy:
       resources:
@@ -25,7 +25,7 @@ services:
 
   catalog:
     hostname: catalog
-    image: public.ecr.aws/aws-containers/retail-store-sample-catalog:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_catalog:${TAG}
     restart: always
     environment:
       - GIN_MODE=release
@@ -38,7 +38,7 @@ services:
       - ALL
 
   catalog-db:
-    image: mariadb:10.9
+    image: cyprientemateu/a1cyprien_do_it_yourself_catalog_db:${TAG}
     hostname: catalog-db
     restart: always
     environment:
@@ -54,7 +54,7 @@ services:
 
   carts:
     hostname: carts
-    image: public.ecr.aws/aws-containers/retail-store-sample-cart:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_cart:${TAG}
     restart: always
     environment:
       - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
@@ -72,7 +72,7 @@ services:
       - ALL
 
   carts-db:
-    image: amazon/dynamodb-local:1.20.0
+    image: cyprientemateu/a1cyprien_do_it_yourself_cart_dynamodb:${TAG}
     hostname: carts-db
     restart: always
     deploy:
@@ -82,7 +82,7 @@ services:
     
   orders:
     hostname: orders
-    image: public.ecr.aws/aws-containers/retail-store-sample-orders:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_orders:${TAG}
     restart: always
     environment:
       - JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -Djava.security.egd=file:/dev/urandom
@@ -103,7 +103,7 @@ services:
       - ALL
 
   orders-db:
-    image: mariadb:10.9
+    image: cyprientemateu/a1cyprien_do_it_yourself_orders_db:${TAG}
     hostname: orders-db
     restart: always
     environment:
@@ -118,7 +118,7 @@ services:
           memory: 128m
 
   checkout:
-    image: public.ecr.aws/aws-containers/retail-store-sample-checkout:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_checkout:${TAG}
     hostname: checkout
     restart: always
     read_only: true
@@ -134,9 +134,9 @@ services:
     cap_drop:
       - ALL
 
-  checkout-redis:
-    image: redis:6-alpine
-    hostname: checkout-redis
+  checkout-db:
+    image: cyprientemateu/a1cyprien_do_it_yourself_checkout_db:${TAG}
+    hostname: checkout-db
     restart: always
     deploy:
       resources:
@@ -147,7 +147,7 @@ services:
     hostname: assets
     environment:
       - PORT=8080
-    image: public.ecr.aws/aws-containers/retail-store-sample-assets:${TAG}
+    image: cyprientemateu/a1cyprien_do_it_yourself_assets:${TAG}
     restart: always
     deploy:
       resources:
@@ -157,7 +157,8 @@ services:
       - ALL
 
   rabbitmq:
-    image: rabbitmq:3-management
+    image: cyprientemateu/a1cyprien_do_it_yourself_orders_db_rabbitmq:${TAG}
+    hostname: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
