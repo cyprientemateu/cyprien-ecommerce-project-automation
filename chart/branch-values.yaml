@@ -1,22 +1,22 @@
 ui:
-  tag: "24"
+  tag: "25"
 catalog:
-  tag: "24"
+  tag: "25"
 catalog_db:
-  tag: "24"
+  tag: "25"
 checkout:
-  tag: "24"
+  tag: "25"
 checkout_db:
-  tag: "24"
+  tag: "25"
 orders:
-  tag: "24"
+  tag: "25"
 orders_db:
-  tag: "24"
+  tag: "25"
 orders_db_rabbitmq:
-  tag: "24"
+  tag: "25"
 cart:
-  tag: "24"
+  tag: "25"
 cart_dynamodb:
-  tag: "24"
+  tag: "25"
 assets:
-  tag: "24"
+  tag: "25"
