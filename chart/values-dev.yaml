@@ -1,0 +1,67 @@
+# Dev environment overlay - applied on top of values.yaml by the ArgoCD
+# Application for this environment. Image tags here are bumped by the
+# CI->CD repository_dispatch flow (Phase 5); "latest" is the starting
+# point until that's wired up.
+#
+# replicaCount: 1 on every app service keeps this light enough to run
+# comfortably on a local kind cluster - production uses the charts' own
+# defaults instead (replicaCount 3 + HPA), see values-production.yaml.
+#
+# All five app charts default autoscaling.enabled: true with minReplicas: 3
+# (catalog is the one exception, already false by default) - that HPA
+# overrides replicaCount regardless of what's set here, and kind has no
+# metrics-server installed for it to actually act on anyway, so it's
+# disabled here rather than left stuck at its minReplicas floor.
+
+assets:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  image:
+    tag: "latest"
+carts:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  image:
+    tag: "latest"
+  # Chart default (256Mi limit) OOMKilled this JVM service repeatedly
+  # (exit code 137) - the OpenTelemetry javaagent it loads adds real
+  # overhead on top of the JVM's own baseline. Matches ui's existing 512Mi.
+  resources:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+catalog:
+  replicaCount: 1
+  image:
+    tag: "latest"
+checkout:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  image:
+    tag: "latest"
+orders:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  image:
+    tag: "latest"
+  # Same OOMKilled issue as carts - see comment there.
+  resources:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
+ui:
+  replicaCount: 1
+  autoscaling:
+    enabled: false
+  image:
+    tag: "latest"

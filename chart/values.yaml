@@ -1,25 +1,53 @@
-# Default values for do_it_yourself.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-ui:
-  tag: "4ab88c"
-catalog:
-  tag: "4ab88c"
-catalog-db:
-  tag: "4ab88c"
-checkout:
-  tag: "4ab88c"
-checkout-db:
-  tag: "4ab88c"
-orders:
-  tag: "4ab88c"
-orders-db:
-  tag: "4ab88c"
-orders-db-rabbitmq:
-  tag: "4ab88c"
-cart:
-  tag: "4ab88c"
-cart-dynamodb:
-  tag: "4ab88c"
-assets:
-  tag: "4ab88c"
+# Shared defaults for the umbrella chart. Environment-specific overrides
+# (image tags, replica counts) live in values-dev.yaml / values-production.yaml.
+#
+# Service hostnames between the app subcharts and the datastore subcharts
+# are already pre-wired by the vendored charts themselves (e.g. catalog's
+# configmap hardcodes DB_ENDPOINT-equivalent host "catalog-db", and the
+# mariadb subchart's primary.service.name is already set to "catalog-db" -
+# same pattern for orders-db/postgresql, checkout-db/redis, carts-db). The
+# one real gap found by testing: the rabbitmq subchart's default auth user
+# doesn't match what the orders app actually connects as.
+
+# All four Bitnami-based datastore subcharts (mariadb, postgresql, redis,
+# rabbitmq) pin image tags that Broadcom has since pulled from the public
+# `bitnami/*` Docker Hub namespace (their 2025 Bitnami Secure Images change).
+# `bitnamilegacy/*` is the community-run archive of free tags, but it only
+# kept newer snapshots than what these vendored charts originally pinned -
+# so each is repointed to the closest currently-available legacy tag rather
+# than the chart's original (now 404ing) one.
+
+# mariadb subchart (chart name: mariadb, used by catalog-db)
+mariadb:
+  image:
+    repository: bitnamilegacy/mariadb
+    tag: "11.8.3"
+
+# postgresql subchart (chart name: postgresql, used by orders-db)
+postgresql:
+  image:
+    repository: bitnamilegacy/postgresql
+    tag: "17.6.0"
+
+# rabbitmq subchart (chart name: rabbitmq, used by orders-db-rabbitmq)
+rabbitmq:
+  image:
+    repository: bitnamilegacy/rabbitmq
+    tag: "4.1.3"
+  # orders has no SPRING_RABBITMQ_USERNAME/PASSWORD override, so Spring's
+  # AMQP client falls back to its own default (guest/guest) - match it here
+  # instead of the chart's default (auth.username "orders_user" with an
+  # auto-generated password), which orders would never be able to guess.
+  auth:
+    username: guest
+    password: guest
+
+# redis subchart (chart name: redis, used by checkout-db)
+redis:
+  image:
+    repository: bitnamilegacy/redis
+    tag: "8.2.1"
+  # Service hostname (master.service.name: "checkout-redis") is unaffected
+  # by architecture, but standalone avoids running an unused replica pod
+  # on a local cluster.
+  architecture: standalone

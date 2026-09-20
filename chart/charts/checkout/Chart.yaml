@@ -1,13 +1,6 @@
 apiVersion: v2
-name: do_it_yourself
-description: >-
-  Umbrella chart for the Revive e-commerce platform. Subcharts under charts/
-  are vendored directly from the app repo's do-it-yourself/helm-chart/
-  (6 app services: assets, carts, catalog, checkout, orders, ui; 5 datastores:
-  mariadb, dynamodb-local, redis, postgresql, rabbitmq) rather than resolved
-  via `helm dependency update`, so a bare `git clone` of this repo alone is
-  enough to `helm template`/`helm install` it - no cross-repo dependency
-  resolution needed at sync time.
+name: checkout
+description: A Helm chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #

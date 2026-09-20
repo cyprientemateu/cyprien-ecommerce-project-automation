@@ -1,0 +1,25 @@
+# Production environment overlay - applied on top of values.yaml. Uses each
+# app chart's own default replicaCount (3) rather than dev's replicaCount: 1.
+#
+# Image tags should be pinned to a real vX.Y.Z release tag once the release
+# flow (ci.yml's validate-release-tag + tag-triggered build) has actually
+# cut one - "latest" is a placeholder until then, not a real prod policy.
+
+assets:
+  image:
+    tag: "latest"
+carts:
+  image:
+    tag: "latest"
+catalog:
+  image:
+    tag: "latest"
+checkout:
+  image:
+    tag: "latest"
+orders:
+  image:
+    tag: "latest"
+ui:
+  image:
+    tag: "latest"
