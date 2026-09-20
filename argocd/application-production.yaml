@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: revive-production
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/cyprientemateu/cyprien-ecommerce-project-automation.git
+    # TODO: once the release flow (ci.yml's validate-release-tag + a real
+    # vX.Y.Z tag push) is actually cutting production builds, point this at
+    # that tag/branch instead of main - see docs/ENGINEERING_JOURNAL.md.
+    targetRevision: main
+    path: chart
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-production.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: revive-production
+  syncPolicy:
+    # Deliberately no `automated:` block - production requires a human to
+    # click Sync in the ArgoCD UI/CLI rather than auto-deploying on every
+    # push to the tracked ref.
+    syncOptions:
+      - CreateNamespace=true
