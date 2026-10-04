@@ -1,5 +1,7 @@
 # 🛍️ 🚀 Revive E-Commerce Platform — GitOps / CD
 
+> **Status:** Active, in-progress project. Built incrementally; see the engineering journal for session-by-session history.
+
 The Helm chart and GitOps/CD side of the Revive e-commerce platform. This repo is deployed by [ArgoCD](https://argo-cd.readthedocs.io/) onto a local Kubernetes cluster (kind). Its companion repo, [`cyprien-ecommerce-project`](https://github.com/cyprientemateu/cyprien-ecommerce-project), owns the application source, the per-service Helm charts vendored into this one, and the CI pipeline that builds the images this repo deploys.
 
 > The full engineering journal — why this rebuild happened, what was found in the legacy pipeline, phase-by-phase progress including how the chart was actually debugged into a working state, and the roadmap — lives in the app repo: [`cyprien-ecommerce-project/docs/ENGINEERING_JOURNAL.md`](https://github.com/cyprientemateu/cyprien-ecommerce-project/blob/main/docs/ENGINEERING_JOURNAL.md). This README covers only what's specific to this repo.
@@ -20,7 +22,8 @@ The Helm chart and GitOps/CD side of the Revive e-commerce platform. This repo i
 
 - **Two credentials are still plaintext-ish.** The vendored mariadb/postgresql subcharts ship a default password (`"testing"`) baked into their own `values.yaml` — not attacker-exposed in the sense of the old committed secrets, but not real secrets management either. Sealed Secrets is still the planned fix (see journal roadmap), not yet done.
 - **No receiving workflow for `repository_dispatch` yet.** The app repo's CI fires the event successfully; nothing here listens for it. Image tag bumps into `values-dev.yaml` are still manual until that workflow is added.
-- **A competing deploy path still exists.** The legacy `Jenkinsfile` in this repo runs `docker-compose down/pull/up` directly against a host, entirely separate from the Helm/ArgoCD path now proven working. Planned for retirement; `docker-compose.yml` itself stays as local dev/demo tooling only.
+- **Three legacy Jenkinsfiles and a competing deploy path still exist.** `Jenkinsfile`, `Jenkinsfile2`, and `Jenkinsfile-tag` are leftover Jenkins pipeline variants from before this repo moved to ArgoCD; `Jenkinsfile` specifically runs `docker-compose down/pull/up` directly against a host, entirely separate from the Helm/ArgoCD path now proven working. `Dockerfile` (a tiny yq/jq image) only exists to support `Jenkinsfile-tag`'s tag-bump step. All four are planned for retirement once ArgoCD fully replaces the Jenkins deploy path; `docker-compose.yml` itself stays as local dev/demo tooling only, independent of this cleanup.
+- **The two secrets removed from `deploy.yaml` are still in this repo's git history.** They were upstream chart defaults (not unique production credentials), but are treated as compromised regardless and are not reused anywhere — removing them from history is cosmetic, not a real mitigation, so it isn't planned as separate work.
 - **`revive-production`** Application exists but isn't yet pointed at a real release tag/branch — it tracks `main` as a placeholder.
 
 See the app repo's journal for the full remediation plan and phase order.
@@ -71,8 +74,12 @@ cyprien-ecommerce-project-automation/
 │                                      # orders, orders-db, rabbitmq, ui)
 │
 ├── docker-compose.yml         # local dev only, not a deployment path
-├── Dockerfile                 # tiny yq/jq image, used by the legacy tag-bump Jenkins step
-├── validate.sh                 # semver tag validator (vX.Y.Z), reused by the app repo's release job
+├── .env                        # image tag vars for docker-compose - no secrets
+├── Dockerfile                  # legacy: tiny yq/jq image, only used by Jenkinsfile-tag's tag-bump step
+├── Jenkinsfile                 # legacy: docker-compose-based deploy, superseded by ArgoCD
+├── Jenkinsfile2                 # legacy: an earlier build/dispatch variant
+├── Jenkinsfile-tag              # legacy: semver-tagged release build, uses validate.sh
+├── validate.sh                 # semver tag validator (vX.Y.Z) - still used, reused by the app repo's release job
 └── README.md
 ```
 

@@ -1,0 +1,19 @@
+# Secrets / local config
+.env
+*.tfvars
+kubeconfig
+kubeconfig.yaml
+*-kubeconfig.yaml
+*.pem
+*.key
+
+# Helm dependency archives (subcharts are vendored as plain directories, not .tgz)
+chart/charts/*.tgz
+
+# Editors
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
