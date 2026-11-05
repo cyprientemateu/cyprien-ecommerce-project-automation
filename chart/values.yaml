@@ -5,12 +5,18 @@
 # are already pre-wired by the vendored charts themselves (e.g. catalog's
 # configmap hardcodes DB_ENDPOINT-equivalent host "catalog-db", and the
 # mariadb subchart's primary.service.name is already set to "catalog-db" -
-# same pattern for orders-db/postgresql, checkout-db/redis, carts-db). The
+# same pattern for orders-db/mariadb, checkout-db/redis, carts-db). The
 # one real gap found by testing: the rabbitmq subchart's default auth user
 # doesn't match what the orders app actually connects as.
+#
+# orders is MariaDB-only: its image (upstream retail-store-sample-orders
+# 0.2.0) ships only the MariaDB JDBC driver, and docker-compose.yml runs it
+# with the `mysql` profile. orders-db is therefore a second copy of the
+# mariadb chart (chart name renamed to orders-mariadb so its resource names
+# and values key don't collide with catalog-db's `mariadb`), not PostgreSQL.
 
-# All four Bitnami-based datastore subcharts (mariadb, postgresql, redis,
-# rabbitmq) pin image tags that Broadcom has since pulled from the public
+# Three Bitnami-based datastore image families (mariadb x2, redis, rabbitmq)
+# pin image tags that Broadcom has since pulled from the public
 # `bitnami/*` Docker Hub namespace (their 2025 Bitnami Secure Images change).
 # `bitnamilegacy/*` is the community-run archive of free tags, but it only
 # kept newer snapshots than what these vendored charts originally pinned -
@@ -23,11 +29,11 @@ mariadb:
     repository: bitnamilegacy/mariadb
     tag: "11.8.3"
 
-# postgresql subchart (chart name: postgresql, used by orders-db)
-postgresql:
+# mariadb subchart copy (chart name: orders-mariadb, used by orders-db)
+orders-mariadb:
   image:
-    repository: bitnamilegacy/postgresql
-    tag: "17.6.0"
+    repository: bitnamilegacy/mariadb
+    tag: "11.8.3"
 
 # rabbitmq subchart (chart name: rabbitmq, used by orders-db-rabbitmq)
 rabbitmq:
