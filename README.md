@@ -17,9 +17,15 @@ The Helm chart and GitOps/CD side of the Revive e-commerce platform. This repo i
 - **The chart is a real, working umbrella chart.** `chart/charts/` vendors all 11 per-service charts directly (copied from the app repo's `do-it-yourself/helm-chart/`, not resolved via `helm dependency update`), so a bare `git clone` of this repo is enough to `helm template`/`helm install` it — no cross-repo resolution needed at sync time. The old hand-flattened `templates/deploy.yaml` (and the two base64 "secrets" it had committed) is gone.
 - **ArgoCD Applications exist and work.** `argocd/application-dev.yaml` (auto-sync + self-heal) and `argocd/application-production.yaml` (manual sync only) both point at this repo. `revive-dev` has been confirmed `Synced`/`Healthy` against a real kind cluster, with all 11 services running. Verified by real requests, not pod status: `ui → catalog → mariadb`, and `orders → orders-db` (`/actuator/health` UP, `GET /orders` returns `[]`).
 - **Real deploy bugs found and fixed by actually running this**, not just by reading the YAML: four Bitnami datastore images had been pulled from public Docker Hub and needed repointing to the `bitnamilegacy` archive at a newer tag; rabbitmq's default auth user didn't match what `orders` connects as; five of six app charts' default `autoscaling.enabled: true` was silently overriding `replicaCount`; `carts`/`orders` (both JVM) were getting OOMKilled at the charts' default 256Mi limit; and `orders` was wired to PostgreSQL although its image only ships the MariaDB JDBC driver, so it could never start (replaced with a MariaDB chart). Full writeup in the journal's Sessions 7 and 8.
+- **GitOps behaviour verified in both directions** on a live kind cluster (journal Session 9, with screenshots): a Git commit (`replicaCount` 1 → 2 → 1) rolled out and back with no `kubectl` involved; a manual `kubectl scale` was reverted by ArgoCD `selfHeal` (the sync's `initiatedBy` was `{"automated":true}`); a manually deleted pod was recreated by Kubernetes' own ReplicaSet — a different layer from ArgoCD.
+- **Verified by the application itself, not only by pod status:** `orders` returns `{"status":"UP"}` on `/actuator/health`, and a browser checkout produced a row in `CUSTOMER_ORDER` in `orders-db`.
 
 ## ⚠️ Known Gaps
 
+- **No readiness probes on the app charts, so ArgoCD `Healthy` is weaker than it sounds.** Kubernetes marks a pod ready as soon as its container starts, so a JVM service (`orders`, `carts`) reads `1/1 Running` for the ~3 minutes it takes to boot under the dev CPU limits — and while crash-looping between restarts. Verify with `/actuator/health`, not the pod list.
+- **ArgoCD polls Git (about every 3 minutes); there is no webhook.** A pushed change is not instantaneous. The UI's Refresh button, or `kubectl annotate application revive-dev -n argocd argocd.argoproj.io/refresh=normal`, forces a re-check.
+- **The checkout service never forwards the cart to `orders`.** Upstream's `HttpOrdersService.ts` hardcodes `firstName: "John"`, `lastName: "Doe"` and `items: []`, so persisted orders have no line items. Inherited upstream behaviour, not a chart fault.
+- **The datastores have no PersistentVolumeClaims here**, so data does not survive a pod restart (acceptable for a demo cluster).
 - **Two credentials are still plaintext-ish.** The two vendored MariaDB subcharts (catalog-db, orders-db) ship a default password (`"testing"`) baked into their own `values.yaml` — not attacker-exposed in the sense of the old committed secrets, but not real secrets management either. Sealed Secrets is still the planned fix (see journal roadmap), not yet done.
 - **No receiving workflow for `repository_dispatch` yet.** The app repo's CI fires the event successfully; nothing here listens for it. Image tag bumps into `values-dev.yaml` are still manual until that workflow is added.
 - **Three legacy Jenkinsfiles and a competing deploy path still exist.** `Jenkinsfile`, `Jenkinsfile2`, and `Jenkinsfile-tag` are leftover Jenkins pipeline variants from before this repo moved to ArgoCD; `Jenkinsfile` specifically runs `docker-compose down/pull/up` directly against a host, entirely separate from the Helm/ArgoCD path now proven working. `Dockerfile` (a tiny yq/jq image) only exists to support `Jenkinsfile-tag`'s tag-bump step. All four are planned for retirement once ArgoCD fully replaces the Jenkins deploy path; `docker-compose.yml` itself stays as local dev/demo tooling only, independent of this cleanup.
@@ -73,6 +79,7 @@ cyprien-ecommerce-project-automation/
 │                                      # catalog, catalog-db, checkout, checkout-db,
 │                                      # orders, orders-db, rabbitmq, ui)
 │
+├── .gitattributes             # LF line endings everywhere (repo is edited from Windows and WSL)
 ├── docker-compose.yml         # local dev only, not a deployment path
 ├── .env                        # image tag vars for docker-compose - no secrets
 ├── Dockerfile                  # legacy: tiny yq/jq image, only used by Jenkinsfile-tag's tag-bump step
@@ -82,6 +89,32 @@ cyprien-ecommerce-project-automation/
 ├── validate.sh                 # semver tag validator (vX.Y.Z) - still used, reused by the app repo's release job
 └── README.md
 ```
+
+## 🧪 Running It Locally (kind + ArgoCD)
+
+The sequence used to bring this up by hand, from an empty cluster:
+
+```bash
+kind create cluster --name revive
+kubectl create namespace argocd
+kubectl apply -n argocd --server-side --force-conflicts \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl get pods -n argocd -w            # wait for all 7 pods to be 1/1 Running
+kubectl apply -f argocd/application-dev.yaml
+```
+
+`--server-side` is required: a plain `kubectl apply` fails on the `applicationsets` CRD with `metadata.annotations: Too long`.
+
+Then log in to the ArgoCD UI and verify the app itself:
+
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+kubectl -n argocd port-forward svc/argocd-server 8443:443      # https://localhost:8443, user "admin"
+kubectl -n revive-dev port-forward svc/orders 8081:8080
+curl localhost:8081/actuator/health                             # expect {"status":"UP",...}
+```
+
+The JVM services take about 3 minutes to start under the dev limits, so give them time before judging.
 
 ## 🧰 Technologies Used
 
