@@ -60,7 +60,7 @@ orders:
       cpu: 100m
       memory: 256Mi
 ui:
-  replicaCount: 1
+  replicaCount: 2
   autoscaling:
     enabled: false
   image:
